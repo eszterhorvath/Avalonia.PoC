@@ -5,9 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Avalonia.PoC.FieldControls.NumberFieldControl">
     <UserControl.Content>
-        <StackPanel Margin="5">
-            <TextBlock Text="Enter number:" Margin="0,0,0,5" />
-            <NumericUpDown FormatString="0" />
+        <StackPanel Margin="5" Background="#5d5d5d">
+            <TextBlock Text="Enter number:" Margin="5" />
+            <NumericUpDown FormatString="0" Margin="5" />
         </StackPanel>
     </UserControl.Content>
 </UserControl>

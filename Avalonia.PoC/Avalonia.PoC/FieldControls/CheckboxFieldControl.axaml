@@ -7,13 +7,13 @@
              x:Class="Avalonia.PoC.FieldControls.CheckboxFieldControl"
              x:DataType="f:CheckboxViewModel">
     <UserControl.Content>
-        <StackPanel Margin="5">
+        <StackPanel Margin="5" Background="#5d5d5d">
             <Button Content="Hide checkbox!"
                     Click="HideCheckBoxButton_OnClick"
                     HorizontalAlignment="Center"
                     Margin="5" />
 
-            <StackPanel IsVisible="{Binding IsCheckBoxVisible}">
+            <StackPanel IsVisible="{Binding IsCheckBoxVisible}" Margin="5">
                 <TextBlock Text="{Binding Title}" Margin="0,0,0,5" />
                 <StackPanel>
                     <CheckBox>Blue</CheckBox>

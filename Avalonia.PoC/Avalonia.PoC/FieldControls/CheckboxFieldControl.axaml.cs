@@ -9,7 +9,6 @@ public partial class CheckboxFieldControl : UserControl
     public CheckboxFieldControl()
     {
         InitializeComponent();
-        DataContext = new CheckboxViewModel();
     }
     
     private void HideCheckBoxButton_OnClick(object? sender, RoutedEventArgs e)

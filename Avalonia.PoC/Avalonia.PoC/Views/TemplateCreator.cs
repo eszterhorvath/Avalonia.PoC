@@ -6,10 +6,11 @@ using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.PoC.FieldControls;
+using Avalonia.PoC.ViewModels.Fields;
 
 namespace Avalonia.PoC.Views;
 
-public class TemplateSelector : IDataTemplate
+public class TemplateCreator : IDataTemplate
 {
     private readonly List<string> _controls = ["text", "number", "image", "checkbox"];
 
@@ -30,7 +31,7 @@ public class TemplateSelector : IDataTemplate
             Header = headline.Key,
             Content = fieldTemplatesStackPanel,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            IsHitTestVisible = true
+            IsExpanded = true
         };
 
         var dataTemplate = new DataTemplate
@@ -60,9 +61,15 @@ public class TemplateSelector : IDataTemplate
             case "number":
                 return new NumberFieldControl();
             case "checkbox":
-                return new CheckboxFieldControl();
+                return new CheckboxFieldControl
+                {
+                    DataContext = new CheckboxViewModel()
+                };
             case "image":
-                return new ImageFieldControl();
+                return new ImageFieldControl
+                {
+                    DataContext = new ImageViewModel()
+                };
         }
     }
 }
