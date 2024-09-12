@@ -6,9 +6,13 @@ public class CheckboxViewModel(string title) : ViewModelBase, IFieldViewModel
 {
     private bool _isCheckboxVisible = true;
 
-    public CheckboxViewModel() : this("Checkbox:") { }
+    public CheckboxViewModel(IFieldGroupViewModel parent) : this("Checkbox:")
+    {
+        Parent = parent;
+    }
 
     public string Title { get; } = title;
+    public IFieldGroupViewModel Parent { get; }
 
     public bool IsCheckBoxVisible
     {

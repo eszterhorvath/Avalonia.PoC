@@ -18,7 +18,7 @@
                     <DataTemplate x:DataType="vm:FormViewModel">
                         <Button Margin="10,2"
                                 HorizontalAlignment="Stretch"
-                                Click="Button_OnClick">
+                                Click="OpenButton_OnClick">
                             <TextBlock Text="{Binding Title}"
                                        Margin="8"/>
                             <Button.Styles>

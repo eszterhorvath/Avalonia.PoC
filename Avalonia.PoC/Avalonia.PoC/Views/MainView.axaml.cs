@@ -11,7 +11,7 @@ public partial class MainView : UserControl
         InitializeComponent();
     }
 
-    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    private void OpenButton_OnClick(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainViewModel vm && sender is Button { DataContext: FormViewModel fvm })
         {

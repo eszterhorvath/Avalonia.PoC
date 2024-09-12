@@ -6,9 +6,13 @@ public class ImageViewModel(string title) : ViewModelBase, IFieldViewModel
 {
     private bool _isImageVisible;
 
-    public ImageViewModel() : this("Checkbox:") { }
+    public ImageViewModel(IFieldGroupViewModel parent) : this("Image:")
+    {
+        Parent = parent;
+    }
     
     public string Title { get; } = title;
+    public IFieldGroupViewModel Parent { get; }
 
     public bool IsImageVisible
     {

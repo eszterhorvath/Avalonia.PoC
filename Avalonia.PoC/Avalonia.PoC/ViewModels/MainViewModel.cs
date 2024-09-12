@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using Avalonia.PoC.Templates;
+using Avalonia.PoC.ViewModels.Fields;
 using ReactiveUI;
 
 namespace Avalonia.PoC.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    public ViewModelBase _currentPage;
+    private ViewModelBase _currentPage;
 
     public MainViewModel()
     {
@@ -30,33 +32,36 @@ public class MainViewModel : ViewModelBase
 
     private void SetupForms()
     {
-        var form1Fields = new Dictionary<string, List<string>>
+        var form1Headlines = new List<HeadlineTemplate>
         {
-            {"Headline 1", ["text", "checkbox", "text", "number"]},
-            {"Headline 2", ["text", "number"]}
+            new()
+            {
+                Title = "The one and only headline", Fields = ["text", "number", "checkbox", "image"], CanRepeat = false
+            }
         };
-        AvailableForms.Add(new FormViewModel("Form1", form1Fields, this));
-        
-        var form2Fields = new Dictionary<string, List<string>>
+        AvailableForms.Add(new FormViewModel("Form1", form1Headlines, this));
+
+        var form2Headlines = new List<HeadlineTemplate>
         {
-            {"Headline 1", ["text", "number", "checkbox", "image"]},
-            {"Headline 2", ["image", "number", "checkbox", "text", "text"]}
+            new() { Title = "Headline 1", Fields = ["text", "number", "checkbox", "image"] },
+            new() { Title = "Headline 2", Fields = ["image", "number", "checkbox", "text", "text"] }
         };
-        AvailableForms.Add(new FormViewModel("Form2", form2Fields, this));
+        AvailableForms.Add(new FormViewModel("Form2", form2Headlines, this));
         
         var hundredTextFields = new List<string>();
         for (int i = 0; i < 100; i++)
         {
             hundredTextFields.Add("text");
         }
-        var form3Fields = new Dictionary<string, List<string>>
+
+        var form3Headlines = new List<HeadlineTemplate>
         {
-            {"Headline 1", hundredTextFields},
-            {"Headline 2", hundredTextFields},
-            {"Headline 3", hundredTextFields},
-            {"Headline 4", hundredTextFields},
-            {"Headline 5", hundredTextFields}
+            new() { Title = "Headline 1", Fields = hundredTextFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 2", Fields = hundredTextFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 3", Fields = hundredTextFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 4", Fields = hundredTextFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 5", Fields = hundredTextFields, IsExpandedByDefault = false }
         };
-        AvailableForms.Add(new FormViewModel("Form3", form3Fields, this));
+        AvailableForms.Add(new FormViewModel("Form3", form3Headlines, this));
     }
 }
