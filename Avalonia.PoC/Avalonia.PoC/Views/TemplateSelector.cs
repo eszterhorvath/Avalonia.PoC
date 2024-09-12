@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.PoC.FieldControls;
 
@@ -9,29 +11,58 @@ namespace Avalonia.PoC.Views;
 
 public class TemplateSelector : IDataTemplate
 {
-    private readonly Dictionary<string, IDataTemplate> _templates = new()
-    {
-        { "text", new DataTemplate { Content = new Func<IServiceProvider?, object?>(_ => new TemplateResult<Control>(new TextFieldControl(), null)) } },
-        { "number", new DataTemplate { Content = new Func<IServiceProvider?, object?>(_ => new TemplateResult<Control>(new NumberFieldControl(), null)) } },
-        { "image", new DataTemplate { Content = new Func<IServiceProvider?, object?>(_ => new TemplateResult<Control>(new ImageFieldControl(), null)) } },
-        { "checkbox", new DataTemplate { Content = new Func<IServiceProvider?, object?>(_ => new TemplateResult<Control>(new CheckboxFieldControl(), null)) } }
-    };
+    private readonly List<string> _controls = ["text", "number", "image", "checkbox"];
 
     public Control? Build(object? param)
     {
-        var key = param?.ToString();
-        if (key is null)
+        if (param is not KeyValuePair<string, List<string>> headline)
         {
             throw new ArgumentNullException(nameof(param));
         }
-        return _templates[key].Build(param);
+
+        var fieldTemplatesStackPanel = new StackPanel();
+        foreach (var fieldTemplate in headline.Value)
+        {
+            fieldTemplatesStackPanel.Children.Add(GetFieldInstance(fieldTemplate));
+        }
+        var template = new Expander
+        {
+            Header = headline.Key,
+            Content = fieldTemplatesStackPanel,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            IsHitTestVisible = true
+        };
+
+        var dataTemplate = new DataTemplate
+        {
+            Content = new Func<IServiceProvider?, object?>(_ =>
+                new TemplateResult<Control>(template, null))
+        };
+        return dataTemplate.Build(param);
     }
 
     public bool Match(object? data)
     {
-        var key = data?.ToString();
-        if (key == null) return false;
+        if (data is KeyValuePair<string, List<string>> headline)
+        {
+            return headline.Value.All(f => _controls.Contains(f));
+        }
+        return false;
+    }
 
-        return _templates.ContainsKey(key);
+    private Control GetFieldInstance(string key)
+    {
+        switch (key)
+        {
+            case "text":
+            default:
+                return new TextFieldControl();
+            case "number":
+                return new NumberFieldControl();
+            case "checkbox":
+                return new CheckboxFieldControl();
+            case "image":
+                return new ImageFieldControl();
+        }
     }
 }

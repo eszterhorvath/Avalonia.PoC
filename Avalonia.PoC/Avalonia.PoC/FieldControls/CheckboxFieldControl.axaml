@@ -2,16 +2,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:f="clr-namespace:Avalonia.PoC.ViewModels.Fields"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Avalonia.PoC.FieldControls.CheckboxFieldControl">
+             x:Class="Avalonia.PoC.FieldControls.CheckboxFieldControl"
+             x:DataType="f:CheckboxViewModel">
     <UserControl.Content>
         <StackPanel Margin="5">
-            <TextBlock Text="CheckBox:" Margin="0,0,0,5" />
-            <StackPanel>
-                <CheckBox>Blue</CheckBox>
-                <CheckBox IsChecked="True">Purple</CheckBox>
-                <CheckBox>Green</CheckBox>
-                <CheckBox>Yellow</CheckBox>
+            <Button Content="Hide checkbox!"
+                    Click="HideCheckBoxButton_OnClick"
+                    HorizontalAlignment="Center"
+                    Margin="5" />
+
+            <StackPanel IsVisible="{Binding IsCheckBoxVisible}">
+                <TextBlock Text="{Binding Title}" Margin="0,0,0,5" />
+                <StackPanel>
+                    <CheckBox>Blue</CheckBox>
+                    <CheckBox IsChecked="True">Purple</CheckBox>
+                    <CheckBox>Green</CheckBox>
+                    <CheckBox>Yellow</CheckBox>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </UserControl.Content>

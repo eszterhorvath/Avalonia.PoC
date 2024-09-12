@@ -2,19 +2,18 @@ using System.Collections.Generic;
 
 namespace Avalonia.PoC.ViewModels;
 
-public class FormViewModel
+public class FormViewModel : ViewModelBase
 {
-    public FormViewModel(string title, params string[] fields)
+    public FormViewModel(string title, Dictionary<string, List<string>> fieldGroups, MainViewModel parent)
     {
         Title = title;
-
-        foreach (var f in fields)
-        {
-            Fields.Add(f);
-        }
+        FieldGroups = fieldGroups;
+        Parent = parent;
     }
     
     public string Title { get; }
     
-    public List<string> Fields { get; } = [];
+    public new Dictionary<string, List<string>> FieldGroups { get; }
+    
+    public MainViewModel Parent { get; }
 }

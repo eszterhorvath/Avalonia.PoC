@@ -11,11 +11,11 @@ public partial class MainView : UserControl
         InitializeComponent();
     }
 
-    private void HideCheckBoxButton_OnClick(object? sender, RoutedEventArgs e)
+    private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (DataContext is MainViewModel vm)
+        if (DataContext is MainViewModel vm && sender is Button { DataContext: FormViewModel fvm })
         {
-            vm.IsCheckBoxVisible = !vm.IsCheckBoxVisible;
+            vm.CurrentPage = fvm;
         }
     }
 }
