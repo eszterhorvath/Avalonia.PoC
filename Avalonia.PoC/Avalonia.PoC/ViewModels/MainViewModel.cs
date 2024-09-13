@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia.PoC.Templates;
 using Avalonia.PoC.ViewModels.Fields;
 using ReactiveUI;
@@ -48,19 +49,22 @@ public class MainViewModel : ViewModelBase
         };
         AvailableForms.Add(new FormViewModel("Form2", form2Headlines, this));
         
-        var hundredTextFields = new List<string>();
-        for (int i = 0; i < 100; i++)
+        var hundredRandomFields = new List<string>();
+        var r = new Random();
+        string[] fields = ["text", "number", "checkbox", "image"];
+        for (var i = 0; i < 100; i++)
         {
-            hundredTextFields.Add("text");
+            var x = r.Next(0, 4);
+            hundredRandomFields.Add(fields[x]);
         }
 
         var form3Headlines = new List<HeadlineTemplate>
         {
-            new() { Title = "Headline 1", Fields = hundredTextFields, IsExpandedByDefault = false },
-            new() { Title = "Headline 2", Fields = hundredTextFields, IsExpandedByDefault = false },
-            new() { Title = "Headline 3", Fields = hundredTextFields, IsExpandedByDefault = false },
-            new() { Title = "Headline 4", Fields = hundredTextFields, IsExpandedByDefault = false },
-            new() { Title = "Headline 5", Fields = hundredTextFields, IsExpandedByDefault = false }
+            new() { Title = "Headline 1", Fields = hundredRandomFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 2", Fields = hundredRandomFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 3", Fields = hundredRandomFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 4", Fields = hundredRandomFields, IsExpandedByDefault = false },
+            new() { Title = "Headline 5", Fields = hundredRandomFields, IsExpandedByDefault = false }
         };
         AvailableForms.Add(new FormViewModel("Form3", form3Headlines, this));
     }

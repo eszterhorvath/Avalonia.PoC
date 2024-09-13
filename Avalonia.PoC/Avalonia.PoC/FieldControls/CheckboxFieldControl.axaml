@@ -15,12 +15,17 @@
 
             <StackPanel IsVisible="{Binding IsCheckBoxVisible}" Margin="5">
                 <TextBlock Text="{Binding Title}" Margin="0,0,0,5" />
-                <StackPanel>
-                    <CheckBox>Blue</CheckBox>
-                    <CheckBox IsChecked="True">Purple</CheckBox>
-                    <CheckBox>Green</CheckBox>
-                    <CheckBox>Yellow</CheckBox>
-                </StackPanel>
+                <ListBox SelectionMode="Multiple, Toggle"
+                         ItemsSource="{Binding Options}"><ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Stretch">
+                            <CheckBox IsChecked="{Binding $parent[ListBoxItem].IsSelected}" />
+                            <TextBlock Text="{Binding .}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate></ListBox>
             </StackPanel>
         </StackPanel>
     </UserControl.Content>
