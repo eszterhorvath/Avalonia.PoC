@@ -5,56 +5,44 @@
              xmlns:f="clr-namespace:Avalonia.PoC.ViewModels.Fields"
              xmlns:views="clr-namespace:Avalonia.PoC.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Avalonia.PoC.Views.HeadlineView"
+             x:Class="Avalonia.PoC.FieldControls.HeadlineControl"
              x:DataType="f:HeadlineViewModel">
     <UserControl.Resources>
-        <views:FieldTemplateSelector x:Key="FieldTemplateSelector" />
         <StreamGeometry x:Key="AddCircleRegular">M14,2 C20.627417,2 26,7.372583 26,14 C26,20.627417 20.627417,26 14,26 C7.372583,26 2,20.627417 2,14 C2,7.372583 7.372583,2 14,2 Z M14,3.5 C8.20101013,3.5 3.5,8.20101013 3.5,14 C3.5,19.7989899 8.20101013,24.5 14,24.5 C19.7989899,24.5 24.5,19.7989899 24.5,14 C24.5,8.20101013 19.7989899,3.5 14,3.5 Z M14,8 C14.4142136,8 14.75,8.33578644 14.75,8.75 L14.75,13.25 L19.25,13.25 C19.6642136,13.25 20,13.5857864 20,14 C20,14.4142136 19.6642136,14.75 19.25,14.75 L14.75,14.75 L14.75,19.25 C14.75,19.6642136 14.4142136,20 14,20 C13.5857864,20 13.25,19.6642136 13.25,19.25 L13.25,14.75 L8.75,14.75 C8.33578644,14.75 8,14.4142136 8,14 C8,13.5857864 8.33578644,13.25 8.75,13.25 L13.25,13.25 L13.25,8.75 C13.25,8.33578644 13.5857864,8 14,8 Z</StreamGeometry>
         <StreamGeometry x:Key="ChevronDownRegular">M8.36612 16.1161C7.87796 16.6043 7.87796 17.3957 8.36612 17.8839L23.1161 32.6339C23.6043 33.122 24.3957 33.122 24.8839 32.6339L39.6339 17.8839C40.122 17.3957 40.122 16.6043 39.6339 16.1161C39.1457 15.628 38.3543 15.628 37.8661 16.1161L24 29.9822L10.1339 16.1161C9.64573 15.628 8.85427 15.628 8.36612 16.1161Z</StreamGeometry>
         <StreamGeometry x:Key="ChevronUpRegular">M39.6339 31.8839C39.1457 32.372 38.3543 32.372 37.8661 31.8839L24 18.0178L10.1339 31.8839C9.64573 32.372 8.85427 32.372 8.36612 31.8839C7.87796 31.3957 7.87796 30.6043 8.36612 30.1161L23.1161 15.3661C23.6043 14.878 24.3957 14.878 24.8839 15.3661L39.6339 30.1161C40.122 30.6043 40.122 31.3957 39.6339 31.8839Z</StreamGeometry>
     </UserControl.Resources>
 
     <Grid HorizontalAlignment="Stretch">
-        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <!-- Header section -->
-            <Border Background="DimGray"
-                    Padding="10"
-                    PointerPressed="ExpandCollapseHeadline">
-                <Grid HorizontalAlignment="Stretch"
-                      ColumnDefinitions="*,20,20">
+        <Border Background="DimGray"
+                Padding="10"
+                PointerPressed="ExpandCollapseHeadline">
+            <Grid HorizontalAlignment="Stretch"
+                  ColumnDefinitions="*,20,20">
 
-                    <TextBlock Grid.Column="0" Margin="5"
-                               Text="{Binding Title}" />
+                <TextBlock Grid.Column="0" Margin="5"
+                           Text="{Binding Title}" />
 
-                    <!--this icon is for testing a clickable element within another clickable element-->
-                    <PathIcon Grid.Column="1" Margin="5"
-                              Width="20"
-                              Height="20"
-                              Data="{StaticResource AddCircleRegular}"
-                              IsVisible="{Binding CanRepeat}"
-                              HorizontalAlignment="Right"
-                              PointerPressed="Repeat" />
+                <!--this icon is for testing a clickable element within another clickable element-->
+                <PathIcon Grid.Column="1" Margin="5"
+                          Width="20"
+                          Height="20"
+                          Data="{StaticResource AddCircleRegular}"
+                          IsVisible="{Binding CanRepeat}"
+                          HorizontalAlignment="Right"
+                          PointerPressed="Repeat" />
 
-                    <PathIcon Grid.Column="2" Margin="5"
-                              Width="20"
-                              Height="20"
-                              Data="{StaticResource ChevronDownRegular}"
-                              IsVisible="{Binding !IsExpanded}" />
-                    <PathIcon Grid.Column="2" Margin="5"
-                              Width="20"
-                              Height="20"
-                              Data="{StaticResource ChevronUpRegular}"
-                              IsVisible="{Binding IsExpanded}" />
-                </Grid>
-            </Border>
-            <!-- Content section -->
-            <Border BorderBrush="Gray" BorderThickness="1"
-                    IsVisible="{Binding IsExpanded}">
-                <ItemsControl ItemsSource="{Binding Parent.VisibleFields}"
-                              ItemTemplate="{StaticResource FieldTemplateSelector}"
-                              Margin="10">
-                </ItemsControl>
-            </Border>
-        </StackPanel>
+                <PathIcon Grid.Column="2" Margin="5"
+                          Width="20"
+                          Height="20"
+                          Data="{StaticResource ChevronDownRegular}"
+                          IsVisible="{Binding !IsExpanded}" />
+                <PathIcon Grid.Column="2" Margin="5"
+                          Width="20"
+                          Height="20"
+                          Data="{StaticResource ChevronUpRegular}"
+                          IsVisible="{Binding IsExpanded}" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

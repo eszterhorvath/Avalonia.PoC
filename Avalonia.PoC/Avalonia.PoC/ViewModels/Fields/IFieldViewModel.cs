@@ -1,7 +1,6 @@
 namespace Avalonia.PoC.ViewModels.Fields;
 
-public interface IFieldViewModel
+public interface IFieldViewModel : IFormPartViewModel
 {
-    public string Title { get; }
     public IFieldGroupViewModel Parent { get; }
 }

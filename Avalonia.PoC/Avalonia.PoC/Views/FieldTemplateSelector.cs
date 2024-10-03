@@ -15,17 +15,18 @@ public class FieldTemplateSelector : IDataTemplate
     
     public Control? Build(object? param)
     {
-        if (param is not IFieldViewModel vm)
+        if (param is not IFieldViewModel && param is not IFieldGroupViewModel)
         {
             throw new ArgumentNullException(nameof(param));
         }
 
-        Control? template = vm.GetType().Name.Split('.').Last().Replace("ViewModel", "").ToLower() switch
+        Control? template = param.GetType().Name.Split('.').Last().Replace("ViewModel", "").ToLower() switch
         {
             "text" => new TextFieldControl(),
             "number" => new NumberFieldControl(),
             "checkbox" => new CheckboxFieldControl(),
             "image" => new ImageFieldControl(),
+            "headline" => new HeadlineControl(),
             _ => null
         };
 
@@ -40,11 +41,17 @@ public class FieldTemplateSelector : IDataTemplate
     
     public bool Match(object? data)
     {
-        if (data is IFieldViewModel vm)
+        switch (data)
         {
-            var type = vm.GetType().Name.Split('.').Last().Replace("ViewModel", "");
-            return _controls.Contains(type, StringComparer.InvariantCultureIgnoreCase);
+            case IFieldViewModel field:
+            {
+                var type = field.GetType().Name.Split('.').Last().Replace("ViewModel", "");
+                return _controls.Contains(type, StringComparer.InvariantCultureIgnoreCase);
+            }
+            case IFieldGroupViewModel:
+                return true;
+            default:
+                return false;
         }
-        return false;
     }
 }

@@ -3,9 +3,9 @@ using DynamicData.Binding;
 
 namespace Avalonia.PoC.ViewModels;
 
-public interface IFormViewModel
+public interface IFormViewModel : IFormPartViewModel
 {
-    public IObservableCollection<IFieldViewModel> VisibleFields { get; }
+    public ObservableCollectionExtended<IFormPartViewModel> VisibleFields { get; }
     
     // this is for testing removing items
     void HideOrShowNextField(bool b, TextViewModel textField);

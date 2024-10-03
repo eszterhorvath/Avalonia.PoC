@@ -19,7 +19,7 @@ public class FormViewModel : ViewModelBase, IFormViewModel
         
         FieldGroupTemplates = new ObservableCollectionExtended<HeadlineTemplate>();
         FieldGroups = new ObservableCollectionExtended<IFieldGroupViewModel>();
-        VisibleFields = new ObservableCollectionExtended<IFieldViewModel>(FieldGroups.SelectMany(h => h.Fields));
+        VisibleFields = new ObservableCollectionExtended<IFormPartViewModel>();
         
         var headlineTemplatesListChangedObservable =
             Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
@@ -45,7 +45,7 @@ public class FormViewModel : ViewModelBase, IFormViewModel
 
     public IObservableCollection<HeadlineTemplate> FieldGroupTemplates { get; }
     public IObservableCollection<IFieldGroupViewModel> FieldGroups { get; }
-    public IObservableCollection<IFieldViewModel> VisibleFields { get;}
+    public ObservableCollectionExtended<IFormPartViewModel> VisibleFields { get;}
 
     public FormSelectionViewModel Parent { get; }
     
@@ -53,15 +53,20 @@ public class FormViewModel : ViewModelBase, IFormViewModel
     {
         if (headline.IsExpanded)
         {
-            var toRemove = VisibleFields.Where(f => f.Parent == headline);
+            var toRemove = VisibleFields.Where(f => f is IFieldViewModel field && field.Parent == headline);
             VisibleFields.RemoveMany(toRemove);
             headline.IsExpanded = false;
         }
         else
         {
-            VisibleFields.AddRange(headline.Fields);
-            headline.IsExpanded = true;
+            // IF ADDING A LOT OF FIELDS IS SLOW:
+            // IF COUNT > 25: SUSPEND NOTIFICATIONS => RESET
+            //var count = headline.Fields.Count;
+            //using var _ = VisibleFields.SuspendNotifications();
             
+            var headlineIndex = VisibleFields.IndexOf(headline);
+            VisibleFields.InsertRange(headline.Fields, headlineIndex + 1);
+            headline.IsExpanded = true;
         }
     }
     
@@ -73,6 +78,7 @@ public class FormViewModel : ViewModelBase, IFormViewModel
     private void CreateHeadline(HeadlineTemplate template)
     {
         var headline = new HeadlineViewModel(template, this);
+        VisibleFields.Add(headline);
         
         var fields = new List<IFieldViewModel>();
         foreach (var f in template.Fields)
@@ -108,7 +114,10 @@ public class FormViewModel : ViewModelBase, IFormViewModel
         {
             if (_isNextHidden) return;
             
-            _hiddenField = VisibleFields[index];
+            var next = VisibleFields[index];
+            // if textField is last field of headline, next is a headline which cannot be hidden
+            if (next is not IFieldViewModel nextField) return;
+            _hiddenField = nextField;
             VisibleFields.Remove(_hiddenField);
             _isNextHidden = true;
         }
