@@ -50,7 +50,7 @@
             <!-- Content section -->
             <Border BorderBrush="Gray" BorderThickness="1"
                     IsVisible="{Binding IsExpanded}">
-                <ItemsControl ItemsSource="{Binding VisibleFields}"
+                <ItemsControl ItemsSource="{Binding Parent.VisibleFields}"
                               ItemTemplate="{StaticResource FieldTemplateSelector}"
                               Margin="10">
                 </ItemsControl>

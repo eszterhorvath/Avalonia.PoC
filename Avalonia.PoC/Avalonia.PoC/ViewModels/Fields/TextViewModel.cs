@@ -20,8 +20,9 @@ public class TextViewModel(string title) : ViewModelBase, IFieldViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _value, value);
-            Parent.HideOrShowSecondField(value != string.Empty);
             
+            // imitate that the next field's IsVisible property is scripted to this field
+            Parent.HideOrShowSecondField(value != string.Empty, this);
         }
     }
 }

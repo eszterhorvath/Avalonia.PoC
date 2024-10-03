@@ -1,32 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Reactive.Linq;
-using Avalonia.Interactivity;
 using Avalonia.PoC.Templates;
 using Avalonia.PoC.ViewModels.Fields;
 using DynamicData;
 using DynamicData.Binding;
-using ReactiveUI;
 
 namespace Avalonia.PoC.ViewModels;
 
-public class FormViewModel : ViewModelBase
+public class FormViewModel : ViewModelBase, IFormViewModel
 {
-    public FormViewModel(string title, List<HeadlineTemplate> fieldGroupTemplates, MainViewModel parent)
+    public FormViewModel(string title, List<HeadlineTemplate> fieldGroupTemplates, FormSelectionViewModel parent)
     {
         Title = title;
         Parent = parent;
         
         FieldGroupTemplates = new ObservableCollectionExtended<HeadlineTemplate>();
         FieldGroups = new ObservableCollectionExtended<IFieldGroupViewModel>();
+        VisibleFields = new ObservableCollectionExtended<IFieldViewModel>(FieldGroups.SelectMany(h => h.Fields));
         
-        var listChangedObservable =
+        var headlineTemplatesListChangedObservable =
             Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
                 handler => FieldGroupTemplates.CollectionChanged += handler,
                 handler => FieldGroupTemplates.CollectionChanged -= handler
             );
-        listChangedObservable
+        headlineTemplatesListChangedObservable
             .Select(e => e.EventArgs.NewItems)
             .Subscribe(newItems =>
             {
@@ -39,16 +39,32 @@ public class FormViewModel : ViewModelBase
                 }
             });
         FieldGroupTemplates.AddRange(fieldGroupTemplates);
-
     }
 
     public string Title { get; }
 
     public IObservableCollection<HeadlineTemplate> FieldGroupTemplates { get; }
     public IObservableCollection<IFieldGroupViewModel> FieldGroups { get; }
+    public IObservableCollection<IFieldViewModel> VisibleFields { get;}
 
-    public MainViewModel Parent { get; }
-
+    public FormSelectionViewModel Parent { get; }
+    
+    public void ExpandCollapseHeadline(HeadlineViewModel headline)
+    {
+        if (headline.IsExpanded)
+        {
+            var toRemove = VisibleFields.Where(f => f.Parent == headline);
+            VisibleFields.RemoveMany(toRemove);
+            headline.IsExpanded = false;
+        }
+        else
+        {
+            VisibleFields.AddRange(headline.Fields);
+            headline.IsExpanded = true;
+            
+        }
+    }
+    
     public void AddHeadline(HeadlineTemplate template)
     {
         FieldGroupTemplates.Add(template);
@@ -80,5 +96,26 @@ public class FormViewModel : ViewModelBase
         
         headline.Fields.AddRange(fields);
         FieldGroups.Add(headline);
+    }
+    
+    // this imitates scripted IsVisible on next field
+    private bool _isNextHidden;
+    private IFieldViewModel _hiddenField;
+    public void HideOrShowNextField(bool hide, TextViewModel textField)
+    {
+        var index = VisibleFields.IndexOf(textField) + 1;
+        if (hide)
+        {
+            if (_isNextHidden) return;
+            
+            _hiddenField = VisibleFields[index];
+            VisibleFields.Remove(_hiddenField);
+            _isNextHidden = true;
+        }
+        else
+        {
+            VisibleFields.Insert(index, _hiddenField);
+            _isNextHidden = false;
+        }
     }
 }

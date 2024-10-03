@@ -26,7 +26,7 @@ public partial class HeadlineView : UserControl
     {
         if (DataContext is HeadlineViewModel vm)
         {
-            vm.ExpandCollapseHeadline();
+            vm.Parent.ExpandCollapseHeadline(vm);
         }
     }
 }

@@ -7,35 +7,7 @@
              x:Class="Avalonia.PoC.Views.MainView"
              x:DataType="vm:MainViewModel"
              Background="#444444">
-    <ScrollViewer>
-        <StackPanel>
-            <TextBlock Text="{Binding Greeting}"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Margin="10,15" />
-
-            <ItemsControl ItemsSource="{Binding AvailableForms}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:FormViewModel">
-                        <Button Margin="10,2"
-                                HorizontalAlignment="Stretch"
-                                Click="OpenButton_OnClick">
-                            <TextBlock Text="{Binding Title}"
-                                       Margin="8"/>
-                            <Button.Styles>
-                                <Style Selector="Button">
-                                    <Setter Property="Background" Value="#5d5d5d" />
-                                </Style>
-                                <Style Selector="Button:pointerover /template/ ContentPresenter">
-                                    <Setter Property="Background" Value="#747474" />
-                                </Style>
-                                <Style Selector="Button:pressed /template/ ContentPresenter">
-                                    <Setter Property="Background" Value="#7e7e7e" />
-                                </Style>
-                            </Button.Styles>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-    </ScrollViewer>
+    
+    <TransitioningContentControl Content="{Binding CurrentPage}" />
+    
 </UserControl>

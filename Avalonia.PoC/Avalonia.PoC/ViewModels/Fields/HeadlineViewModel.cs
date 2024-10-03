@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reactive.Linq;
 using Avalonia.PoC.Templates;
-using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 
@@ -20,7 +18,6 @@ public class HeadlineViewModel : ViewModelBase, IFieldGroupViewModel
         Parent = form;
         
         Fields = new ObservableCollectionExtended<IFieldViewModel>();
-        VisibleFields = new ObservableCollectionExtended<IFieldViewModel>(Fields);
         
         var listChangedObservable =
             Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
@@ -35,7 +32,7 @@ public class HeadlineViewModel : ViewModelBase, IFieldGroupViewModel
                 {
                     foreach (var newItem in newItems)
                     {
-                        if (newItem is IFieldViewModel t) VisibleFields.Add(t);
+                        if (newItem is IFieldViewModel { Parent: HeadlineViewModel { IsExpanded: true } } t) Parent.VisibleFields.Add(t);
                     }
                 }
             });
@@ -46,47 +43,15 @@ public class HeadlineViewModel : ViewModelBase, IFieldGroupViewModel
     
     public string Title { get; }
     public IObservableCollection<IFieldViewModel> Fields { get; }
-    public IObservableCollection<IFieldViewModel> VisibleFields { get;}
     public HeadlineTemplate Template { get; }
     public FormViewModel Parent { get; }
+
     public bool CanRepeat { get; }
 
     public bool IsExpanded
     {
         get => _isExpanded;
-        private set => this.RaiseAndSetIfChanged(ref _isExpanded, value);
-    }
-
-    public void ExpandCollapseHeadline()
-    {
-        if (IsExpanded)
-        {
-            VisibleFields.Clear();
-            IsExpanded = false;
-        }
-        else
-        {
-            VisibleFields.AddRange(Fields);
-            IsExpanded = true;
-        }
-    }
-    
-    public void Expand()
-    {
-        if (!IsExpanded)
-        {
-            VisibleFields.AddRange(Fields);
-            IsExpanded = true;
-        }
-    }
-    
-    public void Collapse()
-    {
-        if (IsExpanded)
-        {
-            VisibleFields.Clear();
-            IsExpanded = false;
-        }
+        internal set => this.RaiseAndSetIfChanged(ref _isExpanded, value);
     }
 
     public void Repeat()
@@ -94,22 +59,9 @@ public class HeadlineViewModel : ViewModelBase, IFieldGroupViewModel
         var t = Template.Repeat();
         Parent.AddHeadline(t);
     }
-
-    private bool _isSecondHidden = false;
-    public void HideOrShowSecondField(bool hide)
+    
+    public void HideOrShowSecondField(bool b, TextViewModel textField)
     {
-        if (hide)
-        {
-            if (_isSecondHidden) return;
-            
-            VisibleFields.RemoveAt(1);
-            _isSecondHidden = true;
-        }
-        else
-        {
-            VisibleFields.Clear();
-            VisibleFields.AddRange(Fields);
-            _isSecondHidden = false;
-        }
+        Parent.HideOrShowNextField(b, textField);
     }
 }

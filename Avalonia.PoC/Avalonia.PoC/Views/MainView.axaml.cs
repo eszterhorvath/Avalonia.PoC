@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.PoC.ViewModels;
@@ -9,13 +10,5 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
-    }
-
-    private void OpenButton_OnClick(object? sender, RoutedEventArgs e)
-    {
-        if (DataContext is MainViewModel vm && sender is Button { DataContext: FormViewModel fvm })
-        {
-            vm.CurrentPage = fvm;
-        }
     }
 }
